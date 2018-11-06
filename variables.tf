@@ -144,7 +144,7 @@ variable "cloudwatch_alarm_actions" {
 variable "cloudwatch_alarm_default_thresholds" {
   type        = "map"
   default     = {}
-  description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_thresholds in cloudwatch.tf for valid keys"
+  description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys"
 }
 
 variable "engine" {

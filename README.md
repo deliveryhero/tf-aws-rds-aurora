@@ -66,7 +66,7 @@ terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
 | availability_zones | Availability zones for the cluster. Must 3 or less | string | `<list>` | no |
 | backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
 | cloudwatch_alarm_actions | Actions for cloudwatch alarms. e.g. an SNS topic | list | `<list>` | no |
-| cloudwatch_alarm_default_thresholds | Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_thresholds in cloudwatch.tf for valid keys | map | `<map>` | no |
+| cloudwatch_alarm_default_thresholds | Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys | map | `<map>` | no |
 | cloudwatch_create_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `false` | no |
 | create_resources | Whether to create the Aurora cluster and related resources | string | `true` | no |
 | db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | string | `default.aurora5.6` | no |
