@@ -3,11 +3,13 @@ locals {
   master_password = "${var.password == "" ? random_id.master_password.b64 : var.password}"
 }
 
+# Random string to use as master password unless one is specified
 resource "random_id" "master_password" {
   byte_length = 10
 }
 
 resource "aws_db_subnet_group" "this" {
+  count       = "${var.create_resources}"
   name        = "${var.name}"
   description = "For Aurora cluster ${var.name}"
   subnet_ids  = ["${var.subnets}"]
@@ -15,6 +17,7 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_rds_cluster" "this" {
+  count                           = "${var.create_resources}"
   cluster_identifier              = "${var.name}"
   availability_zones              = ["${var.availability_zones}"]
   engine                          = "${var.engine}"
@@ -38,7 +41,7 @@ resource "aws_rds_cluster" "this" {
 }
 
 resource "aws_rds_cluster_instance" "this" {
-  count                           = "${var.replica_scale_enabled ? var.replica_scale_min : var.replica_count}"
+  count                           = "${var.create_resources ? var.replica_scale_enabled ? var.replica_scale_min : var.replica_count : 0}"
   identifier                      = "${var.name}-${count.index + 1}"
   cluster_identifier              = "${aws_rds_cluster.this.id}"
   engine                          = "${var.engine}"
@@ -55,16 +58,16 @@ resource "aws_rds_cluster_instance" "this" {
   promotion_tier                  = "${count.index + 1}"
   performance_insights_enabled    = "${var.performance_insights_enabled}"
   performance_insights_kms_key_id = "${var.performance_insights_kms_key_id}"
-
-  tags = "${var.tags}"
+  tags                            = "${var.tags}"
 }
 
 resource "random_id" "snapshot_identifier" {
+  count       = "${var.create_resources}"
+  byte_length = 4
+
   keepers = {
     id = "${var.name}"
   }
-
-  byte_length = 4
 }
 
 data "aws_iam_policy_document" "monitoring_rds_assume_role" {
@@ -79,13 +82,13 @@ data "aws_iam_policy_document" "monitoring_rds_assume_role" {
 }
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  count              = "${var.monitoring_interval > 0 ? 1 : 0}"
+  count              = "${var.create_resources ? var.monitoring_interval > 0 ? 1 : 0 : 0}"
   name               = "rds-enhanced-monitoring-${var.name}"
   assume_role_policy = "${data.aws_iam_policy_document.monitoring_rds_assume_role.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-  count      = "${var.monitoring_interval > 0 ? 1 : 0}"
+  count      = "${var.create_resources ? var.monitoring_interval > 0 ? 1 : 0 : 0}"
   role       = "${aws_iam_role.rds_enhanced_monitoring.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
@@ -121,6 +124,7 @@ resource "aws_appautoscaling_policy" "autoscaling_read_replica_count" {
 }
 
 resource "aws_security_group" "this" {
+  count       = "${var.create_resources}"
   name        = "aurora-${var.name}"
   description = "For Aurora cluster ${var.name}"
   vpc_id      = "${var.vpc_id}"
@@ -128,7 +132,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "default_ingress" {
-  count                    = "${length(var.allowed_security_groups)}"
+  count                    = "${var.create_resources ? length(var.allowed_security_groups) : 0}"
   type                     = "ingress"
   from_port                = "${aws_rds_cluster.this.port}"
   to_port                  = "${aws_rds_cluster.this.port}"
