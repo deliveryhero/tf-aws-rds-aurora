@@ -9,7 +9,7 @@ variable "create_resources" {
   type        = "string"
 }
 
-variable "subnets" {
+variable "subnet_ids" {
   description = "List of subnet IDs to use"
   type        = "list"
 }
@@ -46,7 +46,7 @@ variable "instance_type" {
 
 variable "publicly_accessible" {
   description = "Whether the DB should have a public IP address"
-  default     = "false"
+  default     = false
 }
 
 variable "username" {
@@ -71,7 +71,7 @@ variable "skip_final_snapshot" {
 
 variable "backup_retention_period" {
   description = "How long to keep backups for (in days)"
-  default     = "7"
+  default     = 7
 }
 
 variable "preferred_backup_window" {
@@ -121,7 +121,7 @@ variable "snapshot_identifier" {
 
 variable "storage_encrypted" {
   description = "Specifies whether the underlying storage layer should be encrypted"
-  default     = "true"
+  default     = false
 }
 
 variable "kms_key_id" {
@@ -135,16 +135,16 @@ variable "cloudwatch_create_alarms" {
   description = "Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified"
 }
 
-variable "cloudwatch_sns_topic" {
-  type        = "string"
-  default     = "false"
-  description = "An SNS topic to publish CloudWatch alarms to"
+variable "cloudwatch_alarm_actions" {
+  type        = "list"
+  default     = []
+  description = "Actions for cloudwatch alarms. e.g. an SNS topic"
 }
 
 variable "cloudwatch_alarm_default_thresholds" {
   type        = "map"
   default     = {}
-  description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_thresholds in cloudwatch.tf for valid keys"
+  description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys"
 }
 
 variable "engine" {
@@ -157,7 +157,7 @@ variable "engine_version" {
   default     = "5.6.10a"
 }
 
-variable "replica_scale_enabled" {
+variable "replica_autoscaling" {
   type        = "string"
   default     = false
   description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas"
@@ -165,31 +165,31 @@ variable "replica_scale_enabled" {
 
 variable "replica_scale_max" {
   type        = "string"
-  default     = "0"
+  default     = 0
   description = "Maximum number of replicas to allow scaling for"
 }
 
 variable "replica_scale_min" {
   type        = "string"
-  default     = "2"
+  default     = 1
   description = "Maximum number of replicas to allow scaling for"
 }
 
 variable "replica_scale_cpu" {
   type        = "string"
-  default     = "70"
+  default     = 70
   description = "CPU usage to trigger autoscaling at"
 }
 
 variable "replica_scale_in_cooldown" {
   type        = "string"
-  default     = "300"
+  default     = 300
   description = "Cooldown in seconds before allowing further scaling operations after a scale in"
 }
 
 variable "replica_scale_out_cooldown" {
   type        = "string"
-  default     = "300"
+  default     = 300
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
 
