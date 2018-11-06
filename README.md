@@ -1,3 +1,60 @@
+# AWS RDS Aurora Terraform module
+
+Terraform module which creates RDS Aurora resources on AWS.
+
+These types of resources are supported:
+
+* [RDS Cluster](https://www.terraform.io/docs/providers/aws/r/rds_cluster.html)
+* [RDS Cluster Instance](https://www.terraform.io/docs/providers/aws/r/rds_cluster_instance.html)
+* [DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
+* [Application AutoScaling Policy](https://www.terraform.io/docs/providers/aws/r/appautoscaling_policy.html)
+* [Application AutoScaling Target](https://www.terraform.io/docs/providers/aws/r/appautoscaling_target.html)
+
+## Available features
+
+- Autoscaling of replicas
+- Enhanced Monitoring
+- Optional cloudwatch alarms
+
+## Usage
+
+```hcl
+module "db" {
+  source                          = "terraform-aws-modules/rds-aurora/aws"
+  name                            = "test-aurora-db-postgres96"
+  engine                          = "aurora-postgresql"
+  engine_version                  = "9.6.3"
+  vpc_id                          = "vpc-12345678"
+  subnet_ids                      = ["subnet-12345678", "subnet-87654321"]
+  azs                             = ["eu-west-1a", "eu-west-1b"]
+  replica_count                   = 1
+  allowed_security_groups         = ["sg-12345678"]
+  instance_type                   = "db.r4.large"
+  db_parameter_group_name         = "default"
+  db_cluster_parameter_group_name = "default"
+
+  tags = {
+    Environment = "dev"
+    Terraform   = "true"
+  }
+}
+```
+
+## Examples
+
+- [PostgreSQL](examples/postgres): A simple example with VPC and PostgreSQL cluster.
+- [MySQL](examples/mysql): A simple example with VPC and MySQL cluster.
+- [Production](examples/production): A production ready PostgreSQL cluster with enhanced monitoring, autoscaling and cloudwatch alarms.
+
+## Documentation generation
+
+Documentation should be modified within `main.tf` and generated using [terraform-docs](https://github.com/segmentio/terraform-docs).
+Generate them like so:
+
+```bash
+go get github.com/segmentio/terraform-docs
+terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
+```
 
 ## Inputs
 
