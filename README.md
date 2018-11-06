@@ -20,16 +20,12 @@ These types of resources are supported:
 ```hcl
 module "db" {
   source                          = "terraform-aws-modules/rds-aurora/aws"
-
   name                            = "test-aurora-db-postgres96"
-
   engine                          = "aurora-postgresql"
   engine_version                  = "9.6.3"
-
   vpc_id                          = "vpc-12345678"
   subnets                         = ["subnet-12345678", "subnet-87654321"]
   azs                             = ["eu-west-1a", "eu-west-1b"]
-  
   replica_count                   = 1
   allowed_security_groups         = ["sg-12345678"]
   instance_type                   = "db.r4.large"
@@ -39,7 +35,7 @@ module "db" {
   db_parameter_group_name         = "default"
   db_cluster_parameter_group_name = "default"
 
-  tags                            = {
+  tags = {
     Environment = "dev"
     Terraform   = "true"
   }
@@ -52,11 +48,15 @@ module "db" {
 - [MySQL](examples/mysql): A simple example with VPC and MySQL cluster.
 - [Advanced](examples/advanced): A PostgreSQL cluster with enhanced monitoring and autoscaling enabled.
 
-## Documentation
+## Documentation generation
 
-Terraform documentation is generated automatically using [pre-commit hooks](http://www.pre-commit.com/). Follow installation instructions [here](https://pre-commit.com/#install).
+Documentation should be modified within `main.tf` and generated using [terraform-docs](https://github.com/segmentio/terraform-docs).
+Generate them like so:
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+```bash
+go get github.com/segmentio/terraform-docs
+terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r > README.md
+```
 
 ## Inputs
 
@@ -111,13 +111,3 @@ Terraform documentation is generated automatically using [pre-commit hooks](http
 | this_rds_cluster_port | The port |
 | this_rds_cluster_reader_endpoint | The cluster reader endpoint |
 | this_security_group_id | aws_security_group |
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-## Authors
-
-Currently maintained by [Max Williams](https://github.com/FutureSharks) and [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora/graphs/contributors).
-
-## License
-
-MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora/tree/master/LICENSE) for full details.
