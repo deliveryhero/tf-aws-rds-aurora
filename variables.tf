@@ -1,5 +1,12 @@
 variable "name" {
   description = "Name given resources"
+  type        = "string"
+}
+
+variable "create_resources" {
+  description = "Whether to create the Aurora cluster and related resources"
+  default     = true
+  type        = "string"
 }
 
 variable "subnets" {
@@ -24,6 +31,7 @@ variable "allowed_security_groups" {
 
 variable "vpc_id" {
   description = "VPC ID"
+  type        = "string"
 }
 
 variable "availability_zones" {
@@ -33,6 +41,7 @@ variable "availability_zones" {
 
 variable "instance_type" {
   description = "Instance type to use"
+  default     = "db.r4.large"
 }
 
 variable "publicly_accessible" {
@@ -120,6 +129,24 @@ variable "kms_key_id" {
   default     = ""
 }
 
+variable "cloudwatch_create_alarms" {
+  type        = "string"
+  default     = false
+  description = "Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified"
+}
+
+variable "cloudwatch_sns_topic" {
+  type        = "string"
+  default     = "false"
+  description = "An SNS topic to publish CloudWatch alarms to"
+}
+
+variable "cloudwatch_alarm_default_thresholds" {
+  type        = "map"
+  default     = {}
+  description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_thresholds in cloudwatch.tf for valid keys"
+}
+
 variable "engine" {
   description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
   default     = "aurora"
@@ -166,10 +193,28 @@ variable "replica_scale_out_cooldown" {
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
 
+variable "route53_zone_id" {
+  type        = "string"
+  default     = ""
+  description = "If specified a route53 record will be created"
+}
+
+variable "route53_record_appendix" {
+  type        = "string"
+  default     = ".rds"
+  description = "Will be appended to the route53 record. Only used if route53_zone_id is passed also"
+}
+
+variable "route53_record_ttl" {
+  type        = "string"
+  default     = 60
+  description = "TTL of route53 record. Only used if route53_zone_id is passed also"
+}
+
 variable "tags" {
-  description = "A map of tags to add to all resources."
   type        = "map"
   default     = {}
+  description = "A map of tags to add to all resources."
 }
 
 variable "performance_insights_enabled" {
