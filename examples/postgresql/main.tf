@@ -1,24 +1,16 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-west-1"
 }
 
-variable "azs" {
-  type = "list"
-
-  default = [
-    "us-east-1a",
-    "us-east-1b",
-    "us-east-1c",
-  ]
-}
+data "aws_availability_zones" "available" {}
 
 module "aurora" {
   source                          = "../../"
-  name                            = "aurora-example"
+  name                            = "aurora-example-postgresql"
   engine                          = "aurora-postgresql"
   engine_version                  = "9.6.3"
-  subnets                         = ["${module.vpc.database_subnets}"]
-  availability_zones              = ["${var.azs}"]
+  subnet_ids                      = ["${module.vpc.database_subnets}"]
+  availability_zones              = ["${data.aws_availability_zones.available.names}"]
   vpc_id                          = "${module.vpc.vpc_id}"
   replica_count                   = 1
   instance_type                   = "db.r4.large"
@@ -48,18 +40,19 @@ resource "aws_security_group" "app_servers" {
 
 resource "aws_security_group_rule" "allow_access" {
   type                     = "ingress"
-  from_port                = "${module.aurora.this_rds_cluster_port}"
-  to_port                  = "${module.aurora.this_rds_cluster_port}"
+  from_port                = "${module.aurora.cluster_port}"
+  to_port                  = "${module.aurora.cluster_port}"
   protocol                 = "tcp"
   source_security_group_id = "${aws_security_group.app_servers.id}"
-  security_group_id        = "${module.aurora.this_security_group_id}"
+  security_group_id        = "${module.aurora.security_group_id}"
 }
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name   = "example"
-  cidr   = "10.0.0.0/16"
-  azs    = ["${var.azs}"]
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "1.46.0"
+  name    = "example-postgres"
+  cidr    = "10.0.0.0/16"
+  azs     = ["${data.aws_availability_zones.available.names}"]
 
   private_subnets = [
     "10.0.1.0/24",

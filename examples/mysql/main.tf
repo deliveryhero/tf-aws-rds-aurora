@@ -14,10 +14,10 @@ variable "azs" {
 
 module "aurora" {
   source                          = "../../"
-  name                            = "aurora-example"
+  name                            = "aurora-example-mysql"
   engine                          = "aurora-mysql"
   engine_version                  = "5.7.12"
-  subnets                         = ["${module.vpc.database_subnets}"]
+  subnet_ids                      = ["${module.vpc.database_subnets}"]
   availability_zones              = ["${var.azs}"]
   vpc_id                          = "${module.vpc.vpc_id}"
   replica_count                   = 1
@@ -48,18 +48,19 @@ resource "aws_security_group" "app_servers" {
 
 resource "aws_security_group_rule" "allow_access" {
   type                     = "ingress"
-  from_port                = "${module.aurora.this_rds_cluster_port}"
-  to_port                  = "${module.aurora.this_rds_cluster_port}"
+  from_port                = "${module.aurora.cluster_port}"
+  to_port                  = "${module.aurora.cluster_port}"
   protocol                 = "tcp"
   source_security_group_id = "${aws_security_group.app_servers.id}"
-  security_group_id        = "${module.aurora.this_security_group_id}"
+  security_group_id        = "${module.aurora.security_group_id}"
 }
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name   = "example"
-  cidr   = "10.0.0.0/16"
-  azs    = ["${var.azs}"]
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "1.46.0"
+  name    = "example-mysql"
+  cidr    = "10.0.0.0/16"
+  azs     = ["${var.azs}"]
 
   private_subnets = [
     "10.0.1.0/24",

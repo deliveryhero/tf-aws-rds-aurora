@@ -1,6 +1,8 @@
 locals {
-  port            = "${var.port == "" ? "${var.engine == "aurora-postgresql" ? "5432" : "3306"}" : var.port}"
-  master_password = "${var.password == "" ? random_id.master_password.b64 : var.password}"
+  port                       = "${var.port == "" ? "${var.engine == "aurora-postgresql" ? "5432" : "3306"}" : var.port}"
+  master_password            = "${var.password == "" ? random_id.master_password.b64 : var.password}"
+  create_enhanced_monitoring = "${var.create_resources && var.monitoring_interval > 0 ? 1 : 0}"
+  cluster_instance_count     = "${var.create_resources ? var.replica_autoscaling ? var.replica_scale_min : var.replica_count : 0}"
 }
 
 # Random string to use as master password unless one is specified
@@ -8,15 +10,15 @@ resource "random_id" "master_password" {
   byte_length = 10
 }
 
-resource "aws_db_subnet_group" "this" {
+resource "aws_db_subnet_group" "main" {
   count       = "${var.create_resources}"
   name        = "${var.name}"
   description = "For Aurora cluster ${var.name}"
-  subnet_ids  = ["${var.subnets}"]
+  subnet_ids  = ["${var.subnet_ids}"]
   tags        = "${merge(var.tags, map("Name", "aurora-${var.name}"))}"
 }
 
-resource "aws_rds_cluster" "this" {
+resource "aws_rds_cluster" "main" {
   count                           = "${var.create_resources}"
   cluster_identifier              = "${var.name}"
   availability_zones              = ["${var.availability_zones}"]
@@ -31,8 +33,8 @@ resource "aws_rds_cluster" "this" {
   preferred_backup_window         = "${var.preferred_backup_window}"
   preferred_maintenance_window    = "${var.preferred_maintenance_window}"
   port                            = "${local.port}"
-  db_subnet_group_name            = "${aws_db_subnet_group.this.name}"
-  vpc_security_group_ids          = ["${aws_security_group.this.id}"]
+  db_subnet_group_name            = "${aws_db_subnet_group.main.name}"
+  vpc_security_group_ids          = ["${aws_security_group.main.id}"]
   snapshot_identifier             = "${var.snapshot_identifier}"
   storage_encrypted               = "${var.storage_encrypted}"
   apply_immediately               = "${var.apply_immediately}"
@@ -40,15 +42,15 @@ resource "aws_rds_cluster" "this" {
   tags                            = "${var.tags}"
 }
 
-resource "aws_rds_cluster_instance" "this" {
-  count                           = "${var.create_resources ? var.replica_scale_enabled ? var.replica_scale_min : var.replica_count : 0}"
+resource "aws_rds_cluster_instance" "instance" {
+  count                           = "${local.cluster_instance_count}"
   identifier                      = "${var.name}-${count.index + 1}"
-  cluster_identifier              = "${aws_rds_cluster.this.id}"
+  cluster_identifier              = "${aws_rds_cluster.main.id}"
   engine                          = "${var.engine}"
   engine_version                  = "${var.engine_version}"
   instance_class                  = "${var.instance_type}"
   publicly_accessible             = "${var.publicly_accessible}"
-  db_subnet_group_name            = "${aws_db_subnet_group.this.name}"
+  db_subnet_group_name            = "${aws_db_subnet_group.main.name}"
   db_parameter_group_name         = "${var.db_parameter_group_name}"
   preferred_maintenance_window    = "${var.preferred_maintenance_window}"
   apply_immediately               = "${var.apply_immediately}"
@@ -82,31 +84,31 @@ data "aws_iam_policy_document" "monitoring_rds_assume_role" {
 }
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  count              = "${var.create_resources ? var.monitoring_interval > 0 ? 1 : 0 : 0}"
+  count              = "${local.create_enhanced_monitoring}"
   name               = "rds-enhanced-monitoring-${var.name}"
   assume_role_policy = "${data.aws_iam_policy_document.monitoring_rds_assume_role.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-  count      = "${var.create_resources ? var.monitoring_interval > 0 ? 1 : 0 : 0}"
+  count      = "${local.create_enhanced_monitoring}"
   role       = "${aws_iam_role.rds_enhanced_monitoring.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
 resource "aws_appautoscaling_target" "read_replica_count" {
-  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  count              = "${var.replica_autoscaling ? 1 : 0}"
   max_capacity       = "${var.replica_scale_max}"
   min_capacity       = "${var.replica_scale_min}"
-  resource_id        = "cluster:${aws_rds_cluster.this.cluster_identifier}"
+  resource_id        = "cluster:${aws_rds_cluster.main.cluster_identifier}"
   scalable_dimension = "rds:cluster:ReadReplicaCount"
   service_namespace  = "rds"
 }
 
 resource "aws_appautoscaling_policy" "autoscaling_read_replica_count" {
-  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  count              = "${var.replica_autoscaling ? 1 : 0}"
   name               = "target-metric"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = "cluster:${aws_rds_cluster.this.cluster_identifier}"
+  resource_id        = "cluster:${aws_rds_cluster.main.cluster_identifier}"
   scalable_dimension = "rds:cluster:ReadReplicaCount"
   service_namespace  = "rds"
 
@@ -123,7 +125,7 @@ resource "aws_appautoscaling_policy" "autoscaling_read_replica_count" {
   depends_on = ["aws_appautoscaling_target.read_replica_count"]
 }
 
-resource "aws_security_group" "this" {
+resource "aws_security_group" "main" {
   count       = "${var.create_resources}"
   name        = "aurora-${var.name}"
   description = "For Aurora cluster ${var.name}"
@@ -134,9 +136,9 @@ resource "aws_security_group" "this" {
 resource "aws_security_group_rule" "default_ingress" {
   count                    = "${var.create_resources ? length(var.allowed_security_groups) : 0}"
   type                     = "ingress"
-  from_port                = "${aws_rds_cluster.this.port}"
-  to_port                  = "${aws_rds_cluster.this.port}"
+  from_port                = "${aws_rds_cluster.main.port}"
+  to_port                  = "${aws_rds_cluster.main.port}"
   protocol                 = "tcp"
   source_security_group_id = "${element(var.allowed_security_groups, count.index)}"
-  security_group_id        = "${aws_security_group.this.id}"
+  security_group_id        = "${aws_security_group.main.id}"
 }
