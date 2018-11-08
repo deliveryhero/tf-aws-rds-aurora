@@ -127,7 +127,7 @@ resource "aws_appautoscaling_policy" "autoscaling_read_replica_count" {
 
 resource "aws_security_group" "main" {
   count       = "${var.create_resources}"
-  name        = "aurora-${var.name}"
+  name        = "${var.name}"
   description = "For Aurora cluster ${var.name}"
   vpc_id      = "${var.vpc_id}"
   tags        = "${merge(var.tags, map("Name", "aurora-${var.name}"))}"
