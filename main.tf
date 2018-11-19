@@ -21,7 +21,6 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_rds_cluster" "main" {
   count                           = "${var.create_resources}"
   cluster_identifier              = "${var.name}"
-  availability_zones              = ["${var.availability_zones}"]
   engine                          = "${var.engine}"
   engine_version                  = "${var.engine_version}"
   kms_key_id                      = "${var.kms_key_id}"

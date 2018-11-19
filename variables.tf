@@ -34,11 +34,6 @@ variable "vpc_id" {
   type        = "string"
 }
 
-variable "availability_zones" {
-  description = "Availability zones for the cluster. Must 3 or less"
-  default     = []
-}
-
 variable "instance_type" {
   description = "Instance type to use"
   default     = "db.r4.large"
@@ -66,7 +61,7 @@ variable "final_snapshot_identifier_prefix" {
 
 variable "skip_final_snapshot" {
   description = "Should a final snapshot be created on cluster destroy"
-  default     = "false"
+  default     = false
 }
 
 variable "backup_retention_period" {
@@ -91,7 +86,7 @@ variable "port" {
 
 variable "apply_immediately" {
   description = "Determines whether or not any DB modifications are applied immediately, or during the maintenance window"
-  default     = "false"
+  default     = false
 }
 
 variable "monitoring_interval" {
@@ -101,7 +96,7 @@ variable "monitoring_interval" {
 
 variable "auto_minor_version_upgrade" {
   description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window"
-  default     = "true"
+  default     = true
 }
 
 variable "db_parameter_group_name" {
@@ -219,7 +214,7 @@ variable "tags" {
 
 variable "performance_insights_enabled" {
   type        = "string"
-  default     = "false"
+  default     = false
   description = "Specifies whether Performance Insights is enabled or not."
 }
 

@@ -63,7 +63,6 @@ terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
 | allowed_security_groups | A list of Security Group ID's to allow access to. | string | `<list>` | no |
 | apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | string | `false` | no |
 | auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | string | `true` | no |
-| availability_zones | Availability zones for the cluster. Must 3 or less | string | `<list>` | no |
 | backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
 | cloudwatch_alarm_actions | Actions for cloudwatch alarms. e.g. an SNS topic | list | `<list>` | no |
 | cloudwatch_alarm_default_thresholds | Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys | map | `<map>` | no |
