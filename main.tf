@@ -130,6 +130,10 @@ resource "aws_security_group" "main" {
   description = "For Aurora cluster ${var.name}"
   vpc_id      = "${var.vpc_id}"
   tags        = "${merge(var.tags, map("Name", "aurora-${var.name}"))}"
+
+  lifecycle = {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "default_ingress" {
