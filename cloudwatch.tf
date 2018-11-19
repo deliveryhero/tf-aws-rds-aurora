@@ -11,7 +11,7 @@ locals {
 
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
   count               = "${local.cloudwatch_create_alarms}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-writer-DiskQueueDepth"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-writer-DiskQueueDepth"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "DiskQueueDepth"
@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "disk_queue_depth", local.cloudwatch_alarm_default_thresholds["disk_queue_depth"])}"
-  alarm_description   = "RDS Maximum DiskQueueDepth Alarm for ${aws_rds_cluster.main.id} writer"
+  alarm_description   = "RDS Maximum DiskQueueDepthfor RDS aurora cluster ${aws_rds_cluster.main.id} writer"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth" {
 
 resource "aws_cloudwatch_metric_alarm" "database_connections_writer" {
   count               = "${local.cloudwatch_create_alarms}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-writer-DatabaseConnections"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-writer-DatabaseConnections"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "DatabaseConnections"
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections_writer" {
   period              = "60"
   statistic           = "Sum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "database_connections", local.cloudwatch_alarm_default_thresholds["database_connections"])}"
-  alarm_description   = "RDS Maximum connection Alarm for ${aws_rds_cluster.main.id} writer"
+  alarm_description   = "RDS Maximum connectionfor RDS aurora cluster ${aws_rds_cluster.main.id} writer"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
@@ -51,7 +51,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections_writer" {
 
 resource "aws_cloudwatch_metric_alarm" "database_connections_reader" {
   count               = "${local.cloudwatch_create_alarms && var.replica_count > 0 ? 1 : 0}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-reader-DatabaseConnections"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-reader-DatabaseConnections"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "DatabaseConnections"
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections_reader" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "database_connections", local.cloudwatch_alarm_default_thresholds["database_connections"])}"
-  alarm_description   = "RDS Maximum connection Alarm for ${aws_rds_cluster.main.id} reader(s)"
+  alarm_description   = "RDS Maximum connectionfor RDS aurora cluster ${aws_rds_cluster.main.id} reader(s)"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections_reader" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_writer" {
   count               = "${local.cloudwatch_create_alarms}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-writer-CPU"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-writer-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -79,7 +79,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_writer" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "cpu_utilization", local.cloudwatch_alarm_default_thresholds["cpu_utilization"])}"
-  alarm_description   = "RDS CPU Alarm for ${aws_rds_cluster.main.id} writer"
+  alarm_description   = "RDS CPUfor RDS aurora cluster ${aws_rds_cluster.main.id} writer"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
@@ -91,7 +91,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_writer" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_reader" {
   count               = "${local.cloudwatch_create_alarms && var.replica_count > 0 ? 1 : 0}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-reader-CPU"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-reader-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -99,7 +99,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_reader" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "cpu_utilization", local.cloudwatch_alarm_default_thresholds["cpu_utilization"])}"
-  alarm_description   = "RDS CPU Alarm for ${aws_rds_cluster.main.id} reader(s)"
+  alarm_description   = "RDS CPUfor RDS aurora cluster ${aws_rds_cluster.main.id} reader(s)"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
@@ -111,7 +111,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_reader" {
 
 resource "aws_cloudwatch_metric_alarm" "aurora_replica_lag" {
   count               = "${local.cloudwatch_create_alarms && var.replica_count > 0 ? 1 : 0}"
-  alarm_name          = "${aws_rds_cluster.main.id}-alarm-rds-reader-AuroraReplicaLag"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-reader-AuroraReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "5"
   metric_name         = "AuroraReplicaLag"
@@ -119,7 +119,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_replica_lag" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "aurora_replica_lag", local.cloudwatch_alarm_default_thresholds["aurora_replica_lag"])}"
-  alarm_description   = "RDS CPU Alarm for ${aws_rds_cluster.main.id}"
+  alarm_description   = "RDS CPUfor RDS aurora cluster ${aws_rds_cluster.main.id}"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
