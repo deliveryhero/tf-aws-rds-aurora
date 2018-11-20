@@ -19,6 +19,11 @@ variable "identifier_prefix" {
   default     = ""
 }
 
+variable "security_group_name_prefix" {
+  description = "Prefix for security group name"
+  default     = "aurora-"
+}
+
 variable "replica_count" {
   description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
   default     = 1
@@ -56,7 +61,7 @@ variable "password" {
 
 variable "final_snapshot_identifier_prefix" {
   description = "The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too."
-  default     = "final"
+  default     = "final-"
 }
 
 variable "skip_final_snapshot" {

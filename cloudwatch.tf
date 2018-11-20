@@ -4,6 +4,8 @@ locals {
     "cpu_utilization"      = 70
     "disk_queue_depth"     = 20
     "aurora_replica_lag"   = 2000
+    "freeable_memory"      = 200000000
+    "swap_usage"           = 100000000
   }
 
   cloudwatch_create_alarms = "${var.create_resources && var.cloudwatch_create_alarms == 1 ? 1 : 0}"
@@ -120,6 +122,86 @@ resource "aws_cloudwatch_metric_alarm" "aurora_replica_lag" {
   statistic           = "Maximum"
   threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "aurora_replica_lag", local.cloudwatch_alarm_default_thresholds["aurora_replica_lag"])}"
   alarm_description   = "RDS CPU for RDS aurora cluster ${aws_rds_cluster.main.id}"
+  alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
+  ok_actions          = ["${var.cloudwatch_alarm_actions}"]
+
+  dimensions {
+    DBClusterIdentifier = "${aws_rds_cluster.main.id}"
+    Role                = "READER"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "swap_usage_writer" {
+  count               = "${local.cloudwatch_create_alarms}"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-writer-SwapUsage"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "SwapUsage"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Maximum"
+  threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "swap_usage", local.cloudwatch_alarm_default_thresholds["swap_usage"])}"
+  alarm_description   = "RDS swap usage for RDS aurora cluster ${aws_rds_cluster.main.id} writer"
+  alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
+  ok_actions          = ["${var.cloudwatch_alarm_actions}"]
+
+  dimensions {
+    DBClusterIdentifier = "${aws_rds_cluster.main.id}"
+    Role                = "WRITER"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "swap_usage_reader" {
+  count               = "${local.cloudwatch_create_alarms && var.replica_count > 0 ? 1 : 0}"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-reader-SwapUsage"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "SwapUsage"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Maximum"
+  threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "swap_usage", local.cloudwatch_alarm_default_thresholds["swap_usage"])}"
+  alarm_description   = "RDS swap usage for RDS aurora cluster ${aws_rds_cluster.main.id} reader(s)"
+  alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
+  ok_actions          = ["${var.cloudwatch_alarm_actions}"]
+
+  dimensions {
+    DBClusterIdentifier = "${aws_rds_cluster.main.id}"
+    Role                = "READER"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "freeable_memory_writer" {
+  count               = "${local.cloudwatch_create_alarms}"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-writer-FreeableMemory"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "FreeableMemory"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Minimum"
+  threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "freeable_memory", local.cloudwatch_alarm_default_thresholds["freeable_memory"])}"
+  alarm_description   = "RDS freeable memory for RDS aurora cluster ${aws_rds_cluster.main.id} writer"
+  alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
+  ok_actions          = ["${var.cloudwatch_alarm_actions}"]
+
+  dimensions {
+    DBClusterIdentifier = "${aws_rds_cluster.main.id}"
+    Role                = "WRITER"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "freeable_memory_reader" {
+  count               = "${local.cloudwatch_create_alarms && var.replica_count > 0 ? 1 : 0}"
+  alarm_name          = "rds-${aws_rds_cluster.main.id}-reader-FreeableMemory"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "FreeableMemory"
+  namespace           = "AWS/RDS"
+  period              = "60"
+  statistic           = "Minimum"
+  threshold           = "${lookup(var.cloudwatch_alarm_default_thresholds, "freeable_memory", local.cloudwatch_alarm_default_thresholds["freeable_memory"])}"
+  alarm_description   = "RDS freeable memory for RDS aurora cluster ${aws_rds_cluster.main.id} reader(s)"
   alarm_actions       = ["${var.cloudwatch_alarm_actions}"]
   ok_actions          = ["${var.cloudwatch_alarm_actions}"]
 
