@@ -228,3 +228,21 @@ variable "performance_insights_kms_key_id" {
   default     = ""
   description = "The ARN for the KMS key to encrypt Performance Insights data."
 }
+
+variable "create_timeout" {
+  type        = "string"
+  default     = "120m"
+  description = "Timeout used for Cluster creation"
+}
+
+variable "update_timeout" {
+  type        = "string"
+  default     = "120m"
+  description = "Timeout used for Cluster modifications"
+}
+
+variable "delete_timeout" {
+  type        = "string"
+  default     = "120m"
+  description = "Timeout used for destroying cluster. This includes any cleanup task during the destroying process."
+}
