@@ -39,6 +39,12 @@ resource "aws_rds_cluster" "main" {
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
   tags                            = "${var.tags}"
+
+  timeouts {
+    create = "${var.create_timeout}"
+    update = "${var.update_timeout}"
+    delete = "${var.delete_timeout}"
+  }
 }
 
 resource "aws_rds_cluster_instance" "instance" {
