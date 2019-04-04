@@ -246,3 +246,9 @@ variable "delete_timeout" {
   default     = "120m"
   description = "Timeout used for destroying cluster. This includes any cleanup task during the destroying process."
 }
+
+variable "reader_endpoint_suffix" {
+  type        = "string"
+  default     = "-ro"
+  description = "Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53_zone_id is passed also"
+}

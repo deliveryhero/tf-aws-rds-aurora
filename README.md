@@ -87,6 +87,7 @@ terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
 | preferred\_backup\_window | When to perform DB backups | string | `"02:00-03:00"` | no |
 | preferred\_maintenance\_window | When to perform DB maintenance | string | `"sun:05:00-sun:06:00"` | no |
 | publicly\_accessible | Whether the DB should have a public IP address | string | `"false"` | no |
+| reader\_endpoint\_suffix | Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53_zone_id is passed also | string | `"-ro"` | no |
 | replica\_autoscaling | Whether to enable autoscaling for RDS Aurora (MySQL) read replicas | string | `"false"` | no |
 | replica\_count | Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead. | string | `"1"` | no |
 | replica\_scale\_cpu | CPU usage to trigger autoscaling at | string | `"70"` | no |
