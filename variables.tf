@@ -223,6 +223,11 @@ variable "performance_insights_enabled" {
   description = "Specifies whether Performance Insights is enabled or not."
 }
 
+variable "deletion_protection" {
+  description = "The database can't be deleted when this value is set to true."
+  default     = true
+}
+
 variable "performance_insights_kms_key_id" {
   type        = "string"
   default     = ""
