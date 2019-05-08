@@ -26,6 +26,7 @@ resource "aws_rds_cluster" "main" {
   kms_key_id                      = "${var.kms_key_id}"
   master_username                 = "${var.username}"
   master_password                 = "${local.master_password}"
+  deletion_protection             = "${var.deletion_protection}"
   final_snapshot_identifier       = "${var.final_snapshot_identifier_prefix}${var.name}-${random_id.snapshot_identifier.hex}"
   skip_final_snapshot             = "${var.skip_final_snapshot}"
   backup_retention_period         = "${var.backup_retention_period}"
