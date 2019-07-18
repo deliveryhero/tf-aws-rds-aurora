@@ -34,6 +34,11 @@ variable "allowed_security_groups" {
   default     = []
 }
 
+variable "extra_security_groups" {
+  description = "A list of Security Group IDs to add to the cluster"
+  default     = []
+}
+
 variable "vpc_id" {
   description = "VPC ID"
   type        = "string"
