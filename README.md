@@ -60,20 +60,22 @@ terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| allowed\_security\_groups | A list of Security Group ID's to allow access to. | list | `<list>` | no |
+| allowed\_security\_groups | A list of Security Group ID's to allow access to. | list | `[]` | no |
 | apply\_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | string | `"false"` | no |
 | auto\_minor\_version\_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | string | `"true"` | no |
 | backup\_retention\_period | How long to keep backups for (in days) | string | `"7"` | no |
-| cloudwatch\_alarm\_actions | Actions for cloudwatch alarms. e.g. an SNS topic | list | `<list>` | no |
-| cloudwatch\_alarm\_default\_thresholds | Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys | map | `<map>` | no |
+| cloudwatch\_alarm\_actions | Actions for cloudwatch alarms. e.g. an SNS topic | list | `[]` | no |
+| cloudwatch\_alarm\_default\_thresholds | Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys | map | `{}` | no |
 | cloudwatch\_create\_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `"false"` | no |
 | create\_resources | Whether to create the Aurora cluster and related resources | string | `"true"` | no |
 | create\_timeout | Timeout used for Cluster creation | string | `"120m"` | no |
 | db\_cluster\_parameter\_group\_name | The name of a DB Cluster parameter group to use | string | `"default.aurora5.6"` | no |
 | db\_parameter\_group\_name | The name of a DB parameter group to use | string | `"default.aurora5.6"` | no |
 | delete\_timeout | Timeout used for destroying cluster. This includes any cleanup task during the destroying process. | string | `"120m"` | no |
+| deletion\_protection | The database can't be deleted when this value is set to true. | string | `"true"` | no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | string | `"aurora"` | no |
 | engine\_version | Aurora database engine version. | string | `"5.6.10a"` | no |
+| extra\_security\_groups | A list of Security Group IDs to add to the cluster | list | `[]` | no |
 | final\_snapshot\_identifier\_prefix | The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `"final-"` | no |
 | identifier\_prefix | Prefix for cluster and instance identifier | string | `""` | no |
 | instance\_type | Instance type to use | string | `"db.r4.large"` | no |
@@ -103,7 +105,7 @@ terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
 | snapshot\_identifier | DB snapshot to create this database from | string | `""` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted | string | `"false"` | no |
 | subnet\_ids | List of subnet IDs to use | list | n/a | yes |
-| tags | A map of tags to add to all resources. | map | `<map>` | no |
+| tags | A map of tags to add to all resources. | map | `{}` | no |
 | update\_timeout | Timeout used for Cluster modifications | string | `"120m"` | no |
 | username | Master DB username | string | `"root"` | no |
 | vpc\_id | VPC ID | string | n/a | yes |
