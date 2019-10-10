@@ -1,17 +1,17 @@
 variable "name" {
   description = "Name given resources"
-  type        = "string"
+  type        = string
 }
 
 variable "create_resources" {
   description = "Whether to create the Aurora cluster and related resources"
   default     = true
-  type        = "string"
+  type        = bool
 }
 
 variable "subnet_ids" {
   description = "List of subnet IDs to use"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "identifier_prefix" {
@@ -41,7 +41,7 @@ variable "extra_security_groups" {
 
 variable "vpc_id" {
   description = "VPC ID"
-  type        = "string"
+  type        = string
 }
 
 variable "instance_type" {
@@ -135,19 +135,19 @@ variable "kms_key_id" {
 }
 
 variable "cloudwatch_create_alarms" {
-  type        = "string"
+  type        = bool
   default     = false
   description = "Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified"
 }
 
 variable "cloudwatch_alarm_actions" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Actions for cloudwatch alarms. e.g. an SNS topic"
 }
 
 variable "cloudwatch_alarm_default_thresholds" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "Override default thresholds for CloudWatch alarms. See cloudwatch_alarm_default_thresholds in cloudwatch.tf for valid keys"
 }
@@ -163,67 +163,67 @@ variable "engine_version" {
 }
 
 variable "replica_autoscaling" {
-  type        = "string"
+  type        = string
   default     = false
   description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas"
 }
 
 variable "replica_scale_max" {
-  type        = "string"
+  type        = string
   default     = 0
   description = "Maximum number of replicas to allow scaling for"
 }
 
 variable "replica_scale_min" {
-  type        = "string"
+  type        = string
   default     = 1
   description = "Maximum number of replicas to allow scaling for"
 }
 
 variable "replica_scale_cpu" {
-  type        = "string"
+  type        = string
   default     = 70
   description = "CPU usage to trigger autoscaling at"
 }
 
 variable "replica_scale_in_cooldown" {
-  type        = "string"
+  type        = string
   default     = 300
   description = "Cooldown in seconds before allowing further scaling operations after a scale in"
 }
 
 variable "replica_scale_out_cooldown" {
-  type        = "string"
+  type        = string
   default     = 300
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
 
 variable "route53_zone_id" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "If specified a route53 record will be created"
 }
 
 variable "route53_record_appendix" {
-  type        = "string"
+  type        = string
   default     = ".rds"
   description = "Will be appended to the route53 record. Only used if route53_zone_id is passed also"
 }
 
 variable "route53_record_ttl" {
-  type        = "string"
+  type        = string
   default     = 60
   description = "TTL of route53 record. Only used if route53_zone_id is passed also"
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "A map of tags to add to all resources."
 }
 
 variable "performance_insights_enabled" {
-  type        = "string"
+  type        = string
   default     = false
   description = "Specifies whether Performance Insights is enabled or not."
 }
@@ -234,31 +234,32 @@ variable "deletion_protection" {
 }
 
 variable "performance_insights_kms_key_id" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "The ARN for the KMS key to encrypt Performance Insights data."
 }
 
 variable "create_timeout" {
-  type        = "string"
+  type        = string
   default     = "120m"
   description = "Timeout used for Cluster creation"
 }
 
 variable "update_timeout" {
-  type        = "string"
+  type        = string
   default     = "120m"
   description = "Timeout used for Cluster modifications"
 }
 
 variable "delete_timeout" {
-  type        = "string"
+  type        = string
   default     = "120m"
   description = "Timeout used for destroying cluster. This includes any cleanup task during the destroying process."
 }
 
 variable "reader_endpoint_suffix" {
-  type        = "string"
+  type        = string
   default     = "-ro"
   description = "Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53_zone_id is passed also"
 }
+
