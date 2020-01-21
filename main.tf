@@ -63,6 +63,7 @@ resource "aws_rds_cluster_instance" "instance" {
   publicly_accessible             = var.publicly_accessible
   db_subnet_group_name            = aws_db_subnet_group.main[0].name
   db_parameter_group_name         = var.db_parameter_group_name
+  preferred_backup_window         = var.preferred_backup_window
   preferred_maintenance_window    = var.preferred_maintenance_window
   apply_immediately               = var.apply_immediately
   monitoring_role_arn             = join("", aws_iam_role.rds_enhanced_monitoring.*.arn)
@@ -71,6 +72,7 @@ resource "aws_rds_cluster_instance" "instance" {
   promotion_tier                  = count.index + 1
   performance_insights_enabled    = var.performance_insights_enabled
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
+  ca_cert_identifier              = var.ca_cert_identifier
   tags                            = var.tags
 }
 
@@ -162,4 +164,3 @@ resource "aws_security_group_rule" "default_ingress" {
   source_security_group_id = element(var.allowed_security_groups, count.index)
   security_group_id        = aws_security_group.main[0].id
 }
-

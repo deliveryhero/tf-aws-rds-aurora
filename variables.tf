@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "ca_cert_identifier" {
+  description = "The identifier of the CA certificate for the DB instances"
+  default     = ""
+}
+
 variable "create_resources" {
   description = "Whether to create the Aurora cluster and related resources"
   default     = true
@@ -262,4 +267,3 @@ variable "reader_endpoint_suffix" {
   default     = "-ro"
   description = "Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53_zone_id is passed also"
 }
-
