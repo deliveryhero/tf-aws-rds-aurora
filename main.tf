@@ -63,8 +63,8 @@ resource "aws_rds_cluster_instance" "instance" {
   publicly_accessible             = var.publicly_accessible
   db_subnet_group_name            = aws_db_subnet_group.main[0].name
   db_parameter_group_name         = var.db_parameter_group_name
-  preferred_backup_window         = var.preferred_backup_window
-  preferred_maintenance_window    = var.preferred_maintenance_window
+  preferred_backup_window         = var.preferred_backup_window_instance
+  preferred_maintenance_window    = var.preferred_maintenance_window_instance
   apply_immediately               = var.apply_immediately
   monitoring_role_arn             = join("", aws_iam_role.rds_enhanced_monitoring.*.arn)
   monitoring_interval             = var.monitoring_interval

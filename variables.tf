@@ -85,13 +85,23 @@ variable "backup_retention_period" {
 }
 
 variable "preferred_backup_window" {
-  description = "When to perform DB backups"
+  description = "When to perform DB backups for the cluster"
   default     = "02:00-03:00"
 }
 
 variable "preferred_maintenance_window" {
-  description = "When to perform DB maintenance"
+  description = "When to perform DB maintenance for the cluster"
   default     = "sun:05:00-sun:06:00"
+}
+
+variable "preferred_backup_window_instance" {
+  description = "When to perform DB backups for instances"
+  default     = ""
+}
+
+variable "preferred_maintenance_window_instance" {
+  description = "When to perform DB maintenance for instances"
+  default     = ""
 }
 
 variable "port" {
