@@ -1,6 +1,6 @@
 locals {
   port                       = var.port == "" ? var.engine == "aurora-postgresql" ? "5432" : "3306" : var.port
-  master_password            = var.password == "" ? random_id.master_password.b64 : var.password
+  master_password            = var.password == "" ? random_id.master_password.b64_url : var.password
   create_enhanced_monitoring = var.create_resources && var.monitoring_interval > 0 ? true : false
   cluster_instance_count     = var.create_resources ? var.replica_autoscaling ? var.replica_scale_min : var.replica_count : 0
 }
