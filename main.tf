@@ -76,6 +76,29 @@ resource "aws_rds_cluster_instance" "instance" {
   tags                            = var.tags
 }
 
+resource "aws_rds_cluster_instance" "data_reader" {
+  count                           = var.create_data_reader ? 1 : 0
+  identifier                      = "${var.name}-data-reader"
+  cluster_identifier              = aws_rds_cluster.main[0].id
+  engine                          = var.engine
+  engine_version                  = var.engine_version
+  instance_class                  = var.data_reader_instance_type
+  publicly_accessible             = var.publicly_accessible
+  db_subnet_group_name            = aws_db_subnet_group.main[0].name
+  db_parameter_group_name         = var.data_reader_parameter_group_name
+  preferred_backup_window         = var.preferred_backup_window_instance
+  preferred_maintenance_window    = var.preferred_maintenance_window_instance
+  apply_immediately               = var.apply_immediately
+  monitoring_role_arn             = join("", aws_iam_role.rds_enhanced_monitoring.*.arn)
+  monitoring_interval             = var.monitoring_interval
+  auto_minor_version_upgrade      = var.auto_minor_version_upgrade
+  promotion_tier                  = 15
+  performance_insights_enabled    = var.performance_insights_enabled
+  performance_insights_kms_key_id = var.performance_insights_kms_key_id
+  ca_cert_identifier              = var.ca_cert_identifier
+  tags                            = merge(var.tags, var.data_reader_tags)
+}
+
 resource "random_id" "snapshot_identifier" {
   count       = var.create_resources ? 1 : 0
   byte_length = 4

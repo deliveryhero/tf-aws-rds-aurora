@@ -277,3 +277,43 @@ variable "reader_endpoint_suffix" {
   default     = "-ro"
   description = "Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53_zone_id is passed also"
 }
+
+variable "create_data_reader" {
+  default     = false
+  description = "Specifies if a data reader node is created."
+}
+
+variable "data_reader_parameter_group_name" {
+  type        = string
+  default     = ""
+  description = "Data reader node db parameter group"
+}
+
+variable "data_reader_endpoint_suffix" {
+  type        = string
+  default     = "-data-reader"
+  description = "Suffix for the Route53 record pointing to the cluster data reader endpoint. Only used if route53_zone_id is passed also"
+}
+
+variable "data_reader_tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to add to data reader resources."
+}
+
+variable "data_reader_instance_type" {
+  description = "Instance type to use for data reader node"
+  default     = "db.r4.large"
+}
+
+variable "data_reader_route53_zone_id" {
+  type        = string
+  default     = ""
+  description = "If specified a data reader route53 record will be created"
+}
+
+variable "data_reader_route53_prefix" {
+  type        = string
+  default     = ""
+  description = "If specified a data reader route53 record will be created"
+}
