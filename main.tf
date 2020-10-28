@@ -77,7 +77,7 @@ resource "aws_rds_cluster_instance" "instance" {
 }
 
 resource "aws_rds_cluster_instance" "data_reader" {
-  count                           = var.create_data_reader ? 1 : 0
+  count                           = var.create_data_reader && var.create_resources ? 1 : 0
   identifier                      = "${var.name}-data-reader"
   cluster_identifier              = aws_rds_cluster.main[0].id
   engine                          = var.engine
