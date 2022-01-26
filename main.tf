@@ -26,27 +26,28 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_rds_cluster" "main" {
   count = var.create_resources ? 1 : 0
 
-  allow_major_version_upgrade     = var.allow_major_version_upgrade
-  cluster_identifier              = "${var.identifier_prefix}${var.name}"
-  engine                          = var.engine
-  engine_version                  = var.engine_version
-  kms_key_id                      = var.kms_key_id
-  master_username                 = var.username
-  master_password                 = local.master_password
-  deletion_protection             = var.deletion_protection
-  final_snapshot_identifier       = "${var.final_snapshot_identifier_prefix}${var.name}-${random_id.snapshot_identifier[0].hex}"
-  skip_final_snapshot             = var.skip_final_snapshot
-  backup_retention_period         = var.backup_retention_period
-  preferred_backup_window         = var.preferred_backup_window
-  preferred_maintenance_window    = var.preferred_maintenance_window
-  port                            = local.port
-  db_subnet_group_name            = aws_db_subnet_group.main[0].name
-  vpc_security_group_ids          = concat([aws_security_group.main[0].id], var.extra_security_groups)
-  snapshot_identifier             = var.snapshot_identifier
-  storage_encrypted               = var.storage_encrypted
-  apply_immediately               = var.apply_immediately
-  db_cluster_parameter_group_name = var.db_cluster_parameter_group_name
-  tags                            = var.tags
+  allow_major_version_upgrade      = var.allow_major_version_upgrade
+  cluster_identifier               = "${var.identifier_prefix}${var.name}"
+  engine                           = var.engine
+  engine_version                   = var.engine_version
+  kms_key_id                       = var.kms_key_id
+  master_username                  = var.username
+  master_password                  = local.master_password
+  deletion_protection              = var.deletion_protection
+  final_snapshot_identifier        = "${var.final_snapshot_identifier_prefix}${var.name}-${random_id.snapshot_identifier[0].hex}"
+  skip_final_snapshot              = var.skip_final_snapshot
+  backup_retention_period          = var.backup_retention_period
+  preferred_backup_window          = var.preferred_backup_window
+  preferred_maintenance_window     = var.preferred_maintenance_window
+  port                             = local.port
+  db_instance_parameter_group_name = var.allow_major_version_upgrade ? var.db_cluster_db_instance_parameter_group_name : null
+  db_subnet_group_name             = aws_db_subnet_group.main[0].name
+  vpc_security_group_ids           = concat([aws_security_group.main[0].id], var.extra_security_groups)
+  snapshot_identifier              = var.snapshot_identifier
+  storage_encrypted                = var.storage_encrypted
+  apply_immediately                = var.apply_immediately
+  db_cluster_parameter_group_name  = var.db_cluster_parameter_group_name
+  tags                             = var.tags
 
   timeouts {
     create = var.create_timeout
