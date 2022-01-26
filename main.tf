@@ -24,7 +24,9 @@ resource "aws_db_subnet_group" "main" {
 }
 
 resource "aws_rds_cluster" "main" {
-  count                           = var.create_resources ? 1 : 0
+  count = var.create_resources ? 1 : 0
+
+  allow_major_version_upgrade     = var.allow_major_version_upgrade
   cluster_identifier              = "${var.identifier_prefix}${var.name}"
   engine                          = var.engine
   engine_version                  = var.engine_version
@@ -74,14 +76,14 @@ resource "aws_rds_cluster_instance" "instance" {
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
   ca_cert_identifier              = var.ca_cert_identifier
   tags                            = var.tags
-  
+
   # Updating engine version forces replacement of instances, and they shouldn't be replaced
   # because cluster will update them if engine version is changed
   lifecycle {
     ignore_changes = [
       engine_version
     ]
-  }  
+  }
 }
 
 resource "aws_rds_cluster_instance" "data_reader" {
@@ -105,14 +107,14 @@ resource "aws_rds_cluster_instance" "data_reader" {
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
   ca_cert_identifier              = var.ca_cert_identifier
   tags                            = merge(var.tags, var.data_reader_tags)
-  
+
   # Updating engine version forces replacement of instances, and they shouldn't be replaced
   # because cluster will update them if engine version is changed
   lifecycle {
     ignore_changes = [
       engine_version
     ]
-  }  
+  }
 }
 
 resource "random_id" "snapshot_identifier" {
