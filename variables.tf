@@ -39,7 +39,7 @@ variable "allow_major_version_upgrade" {
   default     = false
 }
 
-variable "db_instance_parameter_group_name" {
+variable "db_cluster_db_instance_parameter_group_name" {
   description = "Instance parameter group to associate with all instances of the DB cluster. The db_instance_parameter_group_name parameter is only valid in combination with the allow_major_version_upgrade parameter."
   default     = null
 }
