@@ -34,6 +34,11 @@ variable "replica_count" {
   default     = 1
 }
 
+variable "allow_major_version_upgrade" {
+  description = "Determines whether or not major version upgrades are permitted"
+  default     = false
+}
+
 variable "allowed_security_groups" {
   description = "A list of Security Group ID's to allow access to."
   default     = []
