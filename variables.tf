@@ -35,7 +35,7 @@ variable "replica_count" {
 }
 
 variable "allow_major_version_upgrade" {
-  description = "Allow major version upgrade"
+  description = "Determines whether or not major version upgrades are permitted"
   default     = false
 }
 
