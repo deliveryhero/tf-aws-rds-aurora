@@ -12,7 +12,7 @@ resource "random_id" "master_password" {
 
 resource "aws_ssm_parameter" "superuser_password" {
   count = var.store_master_creds_ssm ? 1 : 0
-  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main.endpoint}/superuser/password"
+  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main[0].endpoint}/superuser/password"
   type      = "SecureString"
   value     = local.master_password
   overwrite = true
@@ -20,7 +20,7 @@ resource "aws_ssm_parameter" "superuser_password" {
 
 resource "aws_ssm_parameter" "superuser_name" {
   count = var.store_master_creds_ssm ? 1 : 0
-  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main.endpoint}/superuser/name"
+  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main[0].endpoint}/superuser/name"
   type      = "SecureString"
   value     = var.username
   overwrite = true
