@@ -79,6 +79,18 @@ variable "password" {
   default     = ""
 }
 
+variable "store_master_creds_ssm" {
+  description = "Whether to store master user and password in SSM"
+  default     = false
+  type        = bool
+}
+
+variable "prefix_master_creds_ssm" {
+  description = "SSM parameter prefix for master user credentials"
+  default     = "/database-controller"
+  type        = string
+}
+
 variable "final_snapshot_identifier_prefix" {
   description = "The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too."
   default     = "final-"

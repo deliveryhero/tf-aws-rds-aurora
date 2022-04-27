@@ -98,6 +98,8 @@ No modules.
 | [aws_route53_record.reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_security_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.default_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_ssm_parameter.superuser_name](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.superuser_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [random_id.master_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [random_id.snapshot_identifier](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [aws_iam_policy_document.monitoring_rds_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -146,6 +148,7 @@ No modules.
 | <a name="input_preferred_backup_window_instance"></a> [preferred\_backup\_window\_instance](#input\_preferred\_backup\_window\_instance) | When to perform DB backups for instances | `string` | `""` | no |
 | <a name="input_preferred_maintenance_window"></a> [preferred\_maintenance\_window](#input\_preferred\_maintenance\_window) | When to perform DB maintenance for the cluster | `string` | `"sun:05:00-sun:06:00"` | no |
 | <a name="input_preferred_maintenance_window_instance"></a> [preferred\_maintenance\_window\_instance](#input\_preferred\_maintenance\_window\_instance) | When to perform DB maintenance for instances | `string` | `""` | no |
+| <a name="input_prefix_master_creds_ssm"></a> [prefix\_master\_creds\_ssm](#input\_prefix\_master\_creds\_ssm) | SSM parameter prefix for master user credentials | `string` | `"/database-controller"` | no |
 | <a name="input_publicly_accessible"></a> [publicly\_accessible](#input\_publicly\_accessible) | Whether the DB should have a public IP address | `bool` | `false` | no |
 | <a name="input_reader_endpoint_suffix"></a> [reader\_endpoint\_suffix](#input\_reader\_endpoint\_suffix) | Suffix for the Route53 record pointing to the cluster reader endpoint. Only used if route53\_zone\_id is passed also | `string` | `"-ro"` | no |
 | <a name="input_replica_autoscaling"></a> [replica\_autoscaling](#input\_replica\_autoscaling) | Whether to enable autoscaling for RDS Aurora (MySQL) read replicas | `string` | `false` | no |
@@ -162,6 +165,7 @@ No modules.
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | Should a final snapshot be created on cluster destroy | `bool` | `false` | no |
 | <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | DB snapshot to create this database from | `string` | `""` | no |
 | <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | Specifies whether the underlying storage layer should be encrypted | `bool` | `false` | no |
+| <a name="input_store_master_creds_ssm"></a> [store\_master\_creds\_ssm](#input\_store\_master\_creds\_ssm) | Whether to store master user and password in SSM | `bool` | `false` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs to use | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_update_timeout"></a> [update\_timeout](#input\_update\_timeout) | Timeout used for Cluster modifications | `string` | `"120m"` | no |

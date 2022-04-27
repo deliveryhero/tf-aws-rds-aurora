@@ -10,6 +10,22 @@ resource "random_id" "master_password" {
   byte_length = 10
 }
 
+resource "aws_ssm_parameter" "superuser_password" {
+  count     = var.create_resources && var.store_master_creds_ssm ? 1 : 0
+  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main[0].endpoint}/superuser/password"
+  type      = "SecureString"
+  value     = local.master_password
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "superuser_name" {
+  count     = var.create_resources && var.store_master_creds_ssm ? 1 : 0
+  name      = "${var.prefix_master_creds_ssm}/${aws_rds_cluster.main[0].endpoint}/superuser/name"
+  type      = "SecureString"
+  value     = var.username
+  overwrite = true
+}
+
 resource "aws_db_subnet_group" "main" {
   count       = var.create_resources ? 1 : 0
   name        = var.name
