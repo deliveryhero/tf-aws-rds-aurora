@@ -339,3 +339,21 @@ variable "data_reader_route53_prefix" {
   default     = ""
   description = "If specified a data reader route53 record will be created"
 }
+
+variable "enabled_cloudwatch_logs_exports" {
+  type        = list(any)
+  default     = []
+  description = "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL)."
+}
+
+variable "create_cloudwatch_log_group" {
+  description = "Determines whether a CloudWatch log group is created for each `enabled_cloudwatch_logs_exports`"
+  type        = bool
+  default     = false
+}
+
+variable "cloudwatch_log_group_retention_in_days" {
+  description = "The number of days to retain CloudWatch logs for the DB instance"
+  type        = number
+  default     = 1
+}
