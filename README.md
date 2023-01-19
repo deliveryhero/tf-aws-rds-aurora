@@ -53,18 +53,20 @@ Generate them like so:
 
 ```bash
 go get github.com/segmentio/terraform-docs
-terraform-docs md ./ | cat -s | tail -r | tail -n +2 | tail -r >> README.md
+terraform-docs md ./ | cat -s | perl -e "print reverse(<>)" | tail -n +2 | perl -e "print reverse(<>)" >> README.md
 ```
 
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.63.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.63.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
@@ -77,6 +79,7 @@ No modules.
 |------|------|
 | [aws_appautoscaling_policy.autoscaling_read_replica_count](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.read_replica_count](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
+| [aws_cloudwatch_log_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_metric_alarm.aurora_replica_lag](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cpu_utilization_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cpu_utilization_writer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
@@ -117,6 +120,8 @@ No modules.
 | <a name="input_cloudwatch_alarm_actions"></a> [cloudwatch\_alarm\_actions](#input\_cloudwatch\_alarm\_actions) | Actions for cloudwatch alarms. e.g. an SNS topic | `list(string)` | `[]` | no |
 | <a name="input_cloudwatch_alarm_default_thresholds"></a> [cloudwatch\_alarm\_default\_thresholds](#input\_cloudwatch\_alarm\_default\_thresholds) | Override default thresholds for CloudWatch alarms. See cloudwatch\_alarm\_default\_thresholds in cloudwatch.tf for valid keys | `map(string)` | `{}` | no |
 | <a name="input_cloudwatch_create_alarms"></a> [cloudwatch\_create\_alarms](#input\_cloudwatch\_create\_alarms) | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | `bool` | `false` | no |
+| <a name="input_cloudwatch_log_group_retention_in_days"></a> [cloudwatch\_log\_group\_retention\_in\_days](#input\_cloudwatch\_log\_group\_retention\_in\_days) | The number of days to retain CloudWatch logs for the DB instance | `number` | `1` | no |
+| <a name="input_create_cloudwatch_log_group"></a> [create\_cloudwatch\_log\_group](#input\_create\_cloudwatch\_log\_group) | Determines whether a CloudWatch log group is created for each `enabled_cloudwatch_logs_exports` | `bool` | `false` | no |
 | <a name="input_create_data_reader"></a> [create\_data\_reader](#input\_create\_data\_reader) | Specifies if a data reader node is created. | `bool` | `false` | no |
 | <a name="input_create_resources"></a> [create\_resources](#input\_create\_resources) | Whether to create the Aurora cluster and related resources | `bool` | `true` | no |
 | <a name="input_create_timeout"></a> [create\_timeout](#input\_create\_timeout) | Timeout used for Cluster creation | `string` | `"120m"` | no |
@@ -126,11 +131,12 @@ No modules.
 | <a name="input_data_reader_route53_prefix"></a> [data\_reader\_route53\_prefix](#input\_data\_reader\_route53\_prefix) | If specified a data reader route53 record will be created | `string` | `""` | no |
 | <a name="input_data_reader_route53_zone_id"></a> [data\_reader\_route53\_zone\_id](#input\_data\_reader\_route53\_zone\_id) | If specified a data reader route53 record will be created | `string` | `""` | no |
 | <a name="input_data_reader_tags"></a> [data\_reader\_tags](#input\_data\_reader\_tags) | A map of tags to add to data reader resources. | `map(string)` | `{}` | no |
-| <a name="input_db_cluster_parameter_group_name"></a> [db\_cluster\_parameter\_group\_name](#input\_db\_cluster\_parameter\_group\_name) | The name of a DB Cluster parameter group to use | `string` | `"default.aurora5.6"` | no |
 | <a name="input_db_cluster_db_instance_parameter_group_name"></a> [db\_cluster\_db\_instance\_parameter\_group\_name](#input\_db\_cluster\_db\_instance\_parameter\_group\_name) | Instance parameter group to associate with all instances of the DB cluster. The db\_instance\_parameter\_group\_name parameter is only valid in combination with the allow\_major\_version\_upgrade parameter. | `any` | `null` | no |
+| <a name="input_db_cluster_parameter_group_name"></a> [db\_cluster\_parameter\_group\_name](#input\_db\_cluster\_parameter\_group\_name) | The name of a DB Cluster parameter group to use | `string` | `"default.aurora5.6"` | no |
 | <a name="input_db_parameter_group_name"></a> [db\_parameter\_group\_name](#input\_db\_parameter\_group\_name) | The name of a DB parameter group to use | `string` | `"default.aurora5.6"` | no |
 | <a name="input_delete_timeout"></a> [delete\_timeout](#input\_delete\_timeout) | Timeout used for destroying cluster. This includes any cleanup task during the destroying process. | `string` | `"120m"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | The database can't be deleted when this value is set to true. | `bool` | `true` | no |
+| <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL). | `list(any)` | `[]` | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | `string` | `"aurora"` | no |
 | <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | Aurora database engine version. | `string` | `"5.6.10a"` | no |
 | <a name="input_extra_security_groups"></a> [extra\_security\_groups](#input\_extra\_security\_groups) | A list of Security Group IDs to add to the cluster | `list` | `[]` | no |
