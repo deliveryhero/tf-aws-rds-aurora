@@ -46,6 +46,7 @@ resource "aws_rds_cluster" "main" {
   cluster_identifier               = "${var.identifier_prefix}${var.name}"
   engine                           = var.engine
   engine_version                   = var.engine_version
+  engine_mode                      = var.engine_mode
   kms_key_id                       = var.kms_key_id
   master_username                  = var.username
   master_password                  = local.master_password
@@ -70,6 +71,14 @@ resource "aws_rds_cluster" "main" {
     create = var.create_timeout
     update = var.update_timeout
     delete = var.delete_timeout
+  }
+
+  dynamic "serverlessv2_scaling_configuration" {
+    for_each = var.instance_type == "db.serverless" ? [1] : []
+    content {
+      max_capacity = var.serverlessv2_max_capacity
+      min_capacity = var.serverlessv2_min_capacity
+    }
   }
 }
 

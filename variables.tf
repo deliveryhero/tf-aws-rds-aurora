@@ -199,6 +199,11 @@ variable "engine_version" {
   default     = "5.6.10a"
 }
 
+variable "engine_mode" {
+  description = "Aurora database engine mode."
+  default     = "provisioned"
+}
+
 variable "replica_autoscaling" {
   type        = string
   default     = false
@@ -354,6 +359,18 @@ variable "create_cloudwatch_log_group" {
 
 variable "cloudwatch_log_group_retention_in_days" {
   description = "The number of days to retain CloudWatch logs for the DB instance"
+  type        = number
+  default     = 1
+}
+
+variable "serverlessv2_min_capacity" {
+  description = "Minimum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode"
+  type        = number
+  default     = 0.5
+}
+
+variable "serverlessv2_max_capacity" {
+  description = "Maximum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode"
   type        = number
   default     = 1
 }
