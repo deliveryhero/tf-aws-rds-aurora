@@ -370,7 +370,7 @@ variable "serverlessv2_min_capacity" {
 }
 
 variable "serverlessv2_max_capacity" {
-  description = "Maximum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode"
+  description = "Maximum capacity for an Aurora DB cluster in provisioned (serverless v2) DB engine mode"
   type        = number
   default     = 1
 }
