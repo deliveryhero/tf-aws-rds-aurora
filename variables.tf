@@ -364,7 +364,7 @@ variable "cloudwatch_log_group_retention_in_days" {
 }
 
 variable "serverlessv2_min_capacity" {
-  description = "Minimum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode"
+  description = "Minimum capacity for an Aurora DB cluster in provisioned (serverless v2) DB engine mode"
   type        = number
   default     = 0.5
 }
