@@ -43,6 +43,7 @@ module "db" {
 ## Examples
 
 - [PostgreSQL](examples/postgres): A simple example with VPC and PostgreSQL cluster.
+- [PostgreSQL Serverless V2](examples/postgresql-serverlessv2): A simple example with VPC and PostgreSQL Serverless V2 cluster.
 - [MySQL](examples/mysql): A simple example with VPC and MySQL cluster.
 - [Production](examples/production): A production ready PostgreSQL cluster with enhanced monitoring, autoscaling and cloudwatch alarms.
 
@@ -60,13 +61,13 @@ terraform-docs md ./ | cat -s | perl -e "print reverse(<>)" | tail -n +2 | perl 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.63.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.12.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.63.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.12.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
@@ -138,6 +139,7 @@ No modules.
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | The database can't be deleted when this value is set to true. | `bool` | `true` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL). | `list(any)` | `[]` | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | `string` | `"aurora"` | no |
+| <a name="input_engine_mode"></a> [engine\_mode](#input\_engine\_mode) | Aurora database engine mode. | `string` | `"provisioned"` | no |
 | <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | Aurora database engine version. | `string` | `"5.6.10a"` | no |
 | <a name="input_extra_security_groups"></a> [extra\_security\_groups](#input\_extra\_security\_groups) | A list of Security Group IDs to add to the cluster | `list` | `[]` | no |
 | <a name="input_final_snapshot_identifier_prefix"></a> [final\_snapshot\_identifier\_prefix](#input\_final\_snapshot\_identifier\_prefix) | The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | `string` | `"final-"` | no |
@@ -168,6 +170,8 @@ No modules.
 | <a name="input_route53_record_ttl"></a> [route53\_record\_ttl](#input\_route53\_record\_ttl) | TTL of route53 record. Only used if route53\_zone\_id is passed also | `string` | `60` | no |
 | <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | If specified a route53 record will be created | `string` | `""` | no |
 | <a name="input_security_group_name_prefix"></a> [security\_group\_name\_prefix](#input\_security\_group\_name\_prefix) | Prefix for security group name | `string` | `"aurora-"` | no |
+| <a name="input_serverlessv2_max_capacity"></a> [serverlessv2\_max\_capacity](#input\_serverlessv2\_max\_capacity) | Maximum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode | `number` | `1` | no |
+| <a name="input_serverlessv2_min_capacity"></a> [serverlessv2\_min\_capacity](#input\_serverlessv2\_min\_capacity) | Minimum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode | `number` | `0.5` | no |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | Should a final snapshot be created on cluster destroy | `bool` | `false` | no |
 | <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | DB snapshot to create this database from | `string` | `""` | no |
 | <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | Specifies whether the underlying storage layer should be encrypted | `bool` | `false` | no |
