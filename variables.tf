@@ -374,3 +374,9 @@ variable "serverlessv2_max_capacity" {
   type        = number
   default     = 1
 }
+
+variable "storage_type" {
+  description = "Specifies the storage type to be used by the DB cluster. Valid values are aurora and aurora-iopt1"
+  type        = string
+  default     = ""
+}

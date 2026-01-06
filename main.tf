@@ -62,6 +62,7 @@ resource "aws_rds_cluster" "main" {
   vpc_security_group_ids           = concat([aws_security_group.main[0].id], var.extra_security_groups)
   snapshot_identifier              = var.snapshot_identifier
   storage_encrypted                = var.storage_encrypted
+  storage_type                     = var.storage_type
   apply_immediately                = var.apply_immediately
   db_cluster_parameter_group_name  = var.db_cluster_parameter_group_name
   enabled_cloudwatch_logs_exports  = var.enabled_cloudwatch_logs_exports

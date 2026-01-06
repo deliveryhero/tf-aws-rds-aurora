@@ -170,11 +170,12 @@ No modules.
 | <a name="input_route53_record_ttl"></a> [route53\_record\_ttl](#input\_route53\_record\_ttl) | TTL of route53 record. Only used if route53\_zone\_id is passed also | `string` | `60` | no |
 | <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | If specified a route53 record will be created | `string` | `""` | no |
 | <a name="input_security_group_name_prefix"></a> [security\_group\_name\_prefix](#input\_security\_group\_name\_prefix) | Prefix for security group name | `string` | `"aurora-"` | no |
-| <a name="input_serverlessv2_max_capacity"></a> [serverlessv2\_max\_capacity](#input\_serverlessv2\_max\_capacity) | Maximum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode | `number` | `1` | no |
-| <a name="input_serverlessv2_min_capacity"></a> [serverlessv2\_min\_capacity](#input\_serverlessv2\_min\_capacity) | Minimum capacity for an Aurora DB cluster in provisioned(serverless v2) DB engine mode | `number` | `0.5` | no |
+| <a name="input_serverlessv2_max_capacity"></a> [serverlessv2\_max\_capacity](#input\_serverlessv2\_max\_capacity) | Maximum capacity for an Aurora DB cluster in provisioned (serverless v2) DB engine mode | `number` | `1` | no |
+| <a name="input_serverlessv2_min_capacity"></a> [serverlessv2\_min\_capacity](#input\_serverlessv2\_min\_capacity) | Minimum capacity for an Aurora DB cluster in provisioned (serverless v2) DB engine mode | `number` | `0.5` | no |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | Should a final snapshot be created on cluster destroy | `bool` | `false` | no |
 | <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | DB snapshot to create this database from | `string` | `""` | no |
 | <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | Specifies whether the underlying storage layer should be encrypted | `bool` | `false` | no |
+| <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | Specifies the storage type to be used by the DB cluster. Valid values are aurora and aurora-iopt1 | `string` | `""` | no |
 | <a name="input_store_master_creds_ssm"></a> [store\_master\_creds\_ssm](#input\_store\_master\_creds\_ssm) | Whether to store master user and password in SSM | `bool` | `false` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs to use | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources. | `map(string)` | `{}` | no |
